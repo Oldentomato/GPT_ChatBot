@@ -1,14 +1,12 @@
 import numpy as np
 import pandas as pd
-from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.core.lightning import LightningModule
 from torch.utils.data import DataLoader, Dataset
 from transformers.optimization import AdamW, get_cosine_schedule_with_warmup
 from transformers import PreTrainedTokenizerFast, GPT2LMHeadModel
 import re
+import torch
 
-from data_preprocessing import koGPT2_TOKENIZER, train_dataloader, train_set
+from koGPT.data_preprocessing import koGPT2_TOKENIZER, train_dataloader, train_set
 
 model = GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
 

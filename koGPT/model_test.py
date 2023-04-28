@@ -1,4 +1,4 @@
-from data_preprocessing import koGPT2_TOKENIZER
+from koGPT.data_preprocessing import koGPT2_TOKENIZER
 import torch
 
 model = torch.load("./models/model.pt")

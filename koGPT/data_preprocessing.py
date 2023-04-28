@@ -14,10 +14,14 @@ from get_data import Chatbot_Data
 #2. 기존의 구조(BPE, Sentencepiece 등)에 독립적으로 추가적인 token들을 추가하는 기능
 #3. Special Token들을 (mask, BOS, EOS 등) 관리하는 기능
 
-BOS = "</s>"
-EOS = "</s>"
-PAD = "<pad>"
-MASK = "<unused0>"
+
+Q_TKN = "<usr>"
+A_TKN = "<sys>"
+BOS = '</s>'
+EOS = '</s>'
+MASK = '<unused0>'
+SENT = '<unused1>'
+PAD = '<pad>'
 
 #허깅페이스 transformers 에 등록된 사전 학습된 koGPT2 토크나이저를 가져온다.
 koGPT2_TOKENIZER = PreTrainedTokenizerFast.from_pretrained("skt/kogpt2-base-v2", bos_token=BOS, eos_token=EOS, unk_token="<unk>", pad_token=PAD, mask_token=MASK)
@@ -42,7 +46,7 @@ class ChatbotDataset(Dataset):
     def __init__(self, chats, max_len=40): #데이터셋의 전처리를 해주는 부분
         self._data = chats
         self.max_len = max_len
-        self.q_token = q_TKN
+        self.q_token = Q_TKN
         self.a_token = A_TKN
         self.sent_token = SENT
         self.eos = EOS
