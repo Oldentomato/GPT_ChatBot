@@ -1,0 +1,4 @@
+outs:
+- md5: a43817ce54572ca8a522ebd594903916
+  size: 513320973
+  path: model.pt
