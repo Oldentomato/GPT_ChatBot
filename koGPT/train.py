@@ -5,6 +5,7 @@ from transformers.optimization import AdamW, get_cosine_schedule_with_warmup
 from transformers import PreTrainedTokenizerFast, GPT2LMHeadModel
 import re
 import torch
+from sys import stdout
 
 from koGPT.data_preprocessing import koGPT2_TOKENIZER, train_dataloader, train_set
 
@@ -32,20 +33,22 @@ epoch = 10
 Sneg = -1e18
 
 print ("train start")
-for epoch in range(epoch):
+for now_epoch in range(epoch):
     for batch_idx, samples in enumerate(train_dataloader):
         optimizer.zero_grad()
         token_ids, mask, label = samples
-        out = model(token_ids)
+        out = model(token_ids.to(device))
         out = out.logits      #Returns a new tensor with the logit of the elements of input
-        mask_3d = mask.unsqueeze(dim=2).repeat_interleave(repeats=out.shape[2], dim=2)
-        mask_out = torch.where(mask_3d == 1, out, Sneg * torch.ones_like(out))
+        mask_3d = mask.unsqueeze(dim=2).repeat_interleave(repeats=out.shape[2], dim=2).to(device)
+        mask_out = torch.where(mask_3d == 1, out, Sneg * torch.ones_like(out)).to(device)
         loss = criterion(mask_out.transpose(2, 1), label)
         # 평균 loss 만들기 avg_loss[0] / avg_loss[1] <- loss 정규화
         avg_loss = loss.sum() / mask.sum()
         avg_loss.backward()
         # 학습 끝
         optimizer.step()
+    stdout.write("₩r====="+str(epoch)+" : "+str(now_epoch)+" progressed=====")
+    stdout.flush()
 print ("train end")
-torch.save(model, "./models/model.pt")
+torch.save(model, "./models/skt+kogpt/model.pt")
 print("model saved")
